@@ -9,11 +9,16 @@
 
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, nix-homebrew }:
   let
     configuration = { pkgs, ... }: {
+      
+    system.primaryUser = "ryanrolon";
+    
     environment.systemPackages = with pkgs; [
       wget
       javaPackages.compiler.openjdk25
@@ -23,6 +28,11 @@
     fonts.packages = with pkgs; [
       nerd-fonts.fira-code
     ];
+    
+    homebrew = {
+      enable = true;
+      casks = [ "whatsapp" ];
+    };
 
     users.users.ryanrolon = {
       name = "ryanrolon";
@@ -55,13 +65,23 @@
     darwinConfigurations."underhacked" = nix-darwin.lib.darwinSystem {
       modules = [ 
         configuration
+        
         home-manager.darwinModules.home-manager
         {
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
-        home-manager.users.ryanrolon = import ./home.nix;
-
-        home-manager.backupFileExtension = "backup";
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.ryanrolon = import ./home.nix;
+  
+          home-manager.backupFileExtension = "backup";
+        }
+        
+        nix-homebrew.darwinModules.nix-homebrew
+        {
+          nix-homebrew = {
+            enable = true;
+            enableRosetta = true;
+            user = "ryanrolon";
+          };
         }
       ];
     };
