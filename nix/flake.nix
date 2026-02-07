@@ -19,31 +19,10 @@
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, nix-homebrew, spicetify-nix, catppuccin }:
   let
-    configuration = { pkgs, ... }: {
+    configuration = { lib, ... }: {
       system.primaryUser = "ryanrolon";
 
-      environment.systemPackages = with pkgs; [
-          wget
-          javaPackages.compiler.openjdk25
-      ];
-
-      # Installs fonts or nerd fonts
-      fonts.packages = with pkgs; [
-        nerd-fonts.fira-code
-      ];
-
-      homebrew = {
-        enable = true;
-        casks = [ 
-          "whatsapp"
-          "background-music"
-        ];
-        masApps = {
-          "AdGuard" = 1440147259;
-        };
-        onActivation.autoUpdate = true;
-        onActivation.upgrade = true;
-      };
+      imports = lib.filesystem.listFilesRecursive ./modules/darwin;
 
       users.users.ryanrolon = {
         name = "ryanrolon";
@@ -53,6 +32,8 @@
       system.defaults = {
         controlcenter.BatteryShowPercentage = true;
         dock.orientation = "left";
+        finder.AppleShowAllExtensions = true;
+        loginwindow.GuestEnabled = false;
       };
 
       # Allows Determinate Nix to do its job
