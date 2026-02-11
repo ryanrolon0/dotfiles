@@ -12,7 +12,6 @@
       ];
       userSettings = {
         "telemetry.telemetryLevel" = "off";
-        "files.autoSave" = "afterDelay";
         "chat.disableAIFeatures" = true;
         "editor.fontSize" = 14;
         "explorer.confirmDragAndDrop" = false;

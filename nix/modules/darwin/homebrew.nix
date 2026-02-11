@@ -6,10 +6,8 @@
     casks = [ 
       "whatsapp"
       "background-music"
+      "zen"
     ];
-    masApps = {
-      "AdGuard" = 1440147259;
-    };
     onActivation.autoUpdate = true;
     onActivation.upgrade = true;
   };
